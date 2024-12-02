@@ -23,8 +23,10 @@ fn main() {
     }
     sorted_list_1.sort();
     sorted_list_2.sort();
-    let running_difference = compare_sorted_list(sorted_list_1, sorted_list_2);
+    let running_difference = compare_sorted_list(&sorted_list_1, &sorted_list_2);
     println!("The total difference is {}", running_difference.to_string());
+    let similarity: isize = find_similarity_score(&sorted_list_1, &sorted_list_2);
+    println!("The similarity is {}", similarity);
 }
 fn read_lines(filename: &str) -> Vec<String> {
     read_to_string(filename)
@@ -33,13 +35,27 @@ fn read_lines(filename: &str) -> Vec<String> {
         .map(String::from)
         .collect()
 }
-fn compare_sorted_list(list1: Vec<isize>, list2: Vec<isize>) -> isize {
+fn compare_sorted_list(list1: &Vec<isize>, list2: &Vec<isize>) -> isize {
     let length: usize = list1.len();
     let mut i: usize = 0;
     let mut running_total: isize = 0;
     while i < length {
         running_total = running_total + (list1[i] - list2[i]).abs();
         i = i + 1;
+    }
+    running_total
+}
+
+fn find_similarity_score(list1: &Vec<isize>, list2: &Vec<isize>) -> isize {
+    let mut running_total: isize = 0;
+    for list_1_item in list1.iter() {
+        let mut count: isize = 0;
+        for list_2_item in list2.iter() {
+            if list_2_item == list_1_item {
+                count += 1;
+            }
+        }
+        running_total += count * list_1_item;
     }
     running_total
 }
